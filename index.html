@@ -172,19 +172,19 @@
         } else if (daf === 4 || daf === 5 || daf === 6) {
             if (has === 1) {
                 if (maf === "Yes") {
-                    maxHours = 84; // HAS 1, DAF 4, MAF Yes
+                    maxHours = 84; 
                 } else if (maf === "No") {
-                    maxHours = 40; // HAS 1, DAF 4, MAF No
+                    maxHours = 40; 
                 } else if (maf === "MAF 105+") {
-                    maxHours = 168; // HAS 1, DAF 4, MAF 105+
+                    maxHours = 168;
                 }
             } else if (has === 2) {
                 if (maf === "Yes") {
-                    maxHours = 84; // HAS 2, DAF 4, MAF Yes
+                    maxHours = 84; 
                 } else if (maf === "No") {
-                    maxHours = 40; // HAS 2, DAF 4, MAF No
+                    maxHours = 40; 
                 } else if (maf === "MAF 105+") {
-                    maxHours = 168; // HAS 2, DAF 4, MAF 105+
+                    maxHours = 168; 
                 }
             } else if (has === 3) {
                 maxHours = 25; // HAS 3, DAF 4, 5, or 6
@@ -220,18 +220,18 @@
         document.getElementById("payment-amount").innerText = ""; // Clear payment amount
     }
 
-    function determineCFSLevel(currentHours, maf) {
-        if (currentHours < 4) return "Level 1";
-        if (currentHours < 10) return "Level 2";
-        if (currentHours < 25) return "Level 3";
-        if (currentHours < 40) return "Level 4";
-        if (currentHours < 44) return "Level 5.1";
-        if (currentHours < 64) return "Level 5.2";
-        if (currentHours < 84) return "Level 5.3";
-        if (currentHours < 105) return "Level 6";
-        if (currentHours < 125) return "Level 7.1";
-        if (currentHours < 145) return "Level 7.2";
-        if (currentHours < 168) return "Level 7.3";
+    function determineCFSLevel(currentAllowableHours, maf) {
+        if (currentAllowableHours < 4) return "Level 1";
+        if (currentAllowableHours < 10) return "Level 2";
+        if (currentAllowableHours < 25) return "Level 3";
+        if (currentAllowableHours < 40) return "Level 4";
+        if (currentAllowableHours < 44) return "Level 5.1";
+        if (currentAllowableHours < 64) return "Level 5.2";
+        if (currentAllowableHours < 84) return "Level 5.3";
+        if (currentAllowableHours < 105) return "Level 6";
+        if (currentAllowableHours < 125) return "Level 7.1";
+        if (currentAllowableHours < 145) return "Level 7.2";
+        if (currentAllowableHours < 168) return "Level 7.3";
         return "Level 4"; // Default case if none match
     }
 
