@@ -3,188 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Calculator</title>
+    <title>Eligibility Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            max-width: 600px;
+            background-color: #f4f4f9;
+            color: #333;
         }
-        input, select {
-            margin-bottom: 10px;
-            padding: 10px;
+        h1 {
+            text-align: center;
+            color: #4a4a4a;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+            font-weight: bold;
+        }
+        select, input {
             width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
         }
         button {
-            padding: 10px;
-            background-color: #4CAF50;
+            background-color: #28a745;
             color: white;
+            padding: 10px;
+            margin-top: 15px;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
+            width: 100%;
+            font-size: 16px;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #218838;
         }
-        .result {
+        #results {
             margin-top: 20px;
+            display: none;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        #payment-amount {
             font-weight: bold;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-<h2>Calculate CFS Level and Earnings</h2>
+<div class="container">
+    <h1>Eligibility Calculator</h1>
 
-<label for="location">Select Location:</label>
-<select id="location">
-    <option value="Slovakia">Slovakia</option>
-    <option value="Greece">Greece</option>
-    <option value="Antwerp">Antwerp</option>
-    <option value="Netherlands">Netherlands</option>
-    <option value="Hartford">Hartford</option>
-    <option value="Philadelphia">Philadelphia</option>
-    <option value="Detroit">Detroit</option>
-    <option value="Rockville">Rockville</option>
-    <option value="Cleveland">Cleveland</option>
-    <option value="Columbus">Columbus</option>
-    <option value="Cincinnati">Cincinnati</option>
-    <option value="Portland">Portland</option>
-    <option value="San Francisco Regional">San Francisco Regional</option>
-    <option value="San Francisco">San Francisco</option>
-    <option value="Brazil">Brazil</option>
-    <option value="Australia">Australia</option>
-    <option value="London">London</option>
-    <option value="Brussels">Brussels</option>
-    <option value="ADIAM">ADIAM</option>
-    <option value="CASIP">CASIP</option>
-    <option value="CASIM">CASIM</option>
-    <option value="Croatia">Croatia</option>
-</select>
+    <label for="has">HAS:</label>
+    <select id="has" onchange="checkMAFVisibility()">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
 
-<label for="has">Enter HAS:</label>
-<select id="has">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-</select>
+    <label for="daf">DAF:</label>
+    <select id="daf" onchange="checkMAFVisibility()">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+    </select>
 
-<label for="daf">Enter DAF:</label>
-<select id="daf">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-</select>
+    <div id="maf-container" style="display:none;">
+        <label for="maf">MAF:</label>
+        <select id="maf">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="MAF 105+">MAF 105+</option>
+        </select>
+    </div>
 
-<label for="maf">Enter MAF:</label>
-<select id="maf">
-    <option value="Yes">Yes</option>
-    <option value="No">No</option>
-    <option value="MAF 105+">MAF 105+</option>
-</select>
+    <label for="gov-hours">Government Hours:</label>
+    <input type="number" id="gov-hours" min="0" max="168" value="0" placeholder="0">
 
-<label for="govHours">Enter Government Hours (0 to 168):</label>
-<input type="number" id="govHours" min="0" max="168">
+    <button onclick="calculate()">Calculate</button>
 
-<button onclick="calculate()">Calculate</button>
+    <div id="results">
+        <h2>Results</h2>
+        <p id="current-allowable-hours"></p>
+        <p id="cfs-level"></p>
+        <label for="location">For payment amount, please select location:</label>
+        <select id="location" onchange="showPaymentAmount()">
+            <option value="">Select Location</option>
+            <option value="Slovakia">Slovakia</option>
+            <option value="Greece">Greece</option>
+            <option value="Antwerp">Antwerp</option>
+            <option value="Netherlands">Netherlands</option>
+            <option value="Hartford">Hartford</option>
+            <option value="Philadelphia">Philadelphia</option>
+            <option value="Detroit">Detroit</option>
+            <option value="Rockville">Rockville</option>
+            <option value="Cleveland">Cleveland</option>
+            <option value="Columbus">Columbus</option>
+            <option value="Cincinnati">Cincinnati</option>
+            <option value="Portland">Portland</option>
+            <option value="San Francisco Regional">San Francisco Regional</option>
+            <option value="San Francisco">San Francisco</option>
+            <option value="Brazil">Brazil</option>
+            <option value="Australia">Australia</option>
+            <option value="London">London</option>
+            <option value="Brussels">Brussels</option>
+            <option value="ADIAM">ADIAM</option>
+            <option value="CASIP">CASIP</option>
+            <option value="CASIM">CASIM</option>
+            <option value="Croatia">Croatia</option>
+        </select>
+        <p id="payment-amount"></p>
+    </div>
 
-<div class="result" id="result"></div>
+    <p id="error-message" class="error" style="display:none;"></p>
+</div>
 
 <script>
-function calculateMaxHours(has, daf, maf) {
-    if (has >= 1 && has <= 3 && daf == 1) return 4;
-    else if (has >= 1 && has <= 3 && daf == 2) return 10;
-    else if (has >= 1 && has <= 3 && daf == 3) return 25;
-    else if (has == 3 && (daf == 4 || daf == 5 || daf == 6)) return 25;
-    else if (has <= 2 && daf == 4) return maf === "Yes" ? 84 : 40;
-    else if (has <= 2 && daf == 5) return maf === "Yes" ? 105 : 40;
-    else if (has == 1 && daf == 6) {
-        if (maf === "Yes") return 105;
-        else if (maf === "MAF 105+") return 168;
-        else return 40;
-    }
-    return 0;
-}
+    function checkMAFVisibility() {
+        const has = document.getElementById("has").value;
+        const daf = document.getElementById("daf").value;
+        const mafContainer = document.getElementById("maf-container");
 
-function determineCFSLevel(currentAllowableHours, maf) {
-    if (currentAllowableHours < 4) return 1;
-    else if (currentAllowableHours < 10) return 2;
-    else if (currentAllowableHours < 25) return 3;
-    else if (currentAllowableHours < 40) return 4;
-    else if (maf === "Yes" && currentAllowableHours < 44) return 5.1;
-    else if (maf === "Yes" && currentAllowableHours < 64) return 5.2;
-    else if (maf === "Yes" && currentAllowableHours < 84) return 5.3;
-    else if (maf === "Yes" && currentAllowableHours >= 84) return 6;
-    else if (maf === "MAF 105+" && currentAllowableHours < 125) return 7.1;
-    else if (maf === "MAF 105+" && currentAllowableHours < 145) return 7.2;
-    else if (maf === "MAF 105+" && currentAllowableHours >= 145) return 7.3;
-    return 0;
-}
-
-function calculate() {
-    const location = document.getElementById("location").value;
-    const has = parseInt(document.getElementById("has").value);
-    const daf = parseInt(document.getElementById("daf").value);
-    const maf = document.getElementById("maf").value;
-    const governmentHours = parseInt(document.getElementById("govHours").value);
-
-    if (isNaN(governmentHours) || governmentHours < 0 || governmentHours > 168) {
-        alert("Invalid government hours. Please enter a value between 0 and 168.");
-        return;
+        if ((has === "1" || has === "2") && (daf === "4" || daf === "5" || daf === "6")) {
+            mafContainer.style.display = "block";
+        } else {
+            mafContainer.style.display = "none";
+        }
     }
 
-    const maxHours = calculateMaxHours(has, daf, maf);
-    const currentAllowableHours = maxHours - governmentHours;
+    function calculate() {
+        const has = parseInt(document.getElementById("has").value);
+        const daf = parseInt(document.getElementById("daf").value);
+        const maf = document.getElementById("maf").value;
+        const govHours = parseInt(document.getElementById("gov-hours").value);
+        
+        let maxHours = 0;
 
-    // Check for negative current allowable hours
-    if (currentAllowableHours < 0) {
-        document.getElementById("result").innerHTML = "Please review your entries.";
-        return;
+        // Calculate maximum hours based on HAS, DAF, and MAF
+        if (daf === 1) {
+            maxHours = 4;
+        } else if (daf === 2) {
+            maxHours = 10;
+        } else if (daf === 3) {
+            maxHours = 25;
+        } else if (daf === 4 || daf === 5 || daf === 6) {
+            if (has === 1) {
+                if (maf === "Yes") {
+                    maxHours = 84; // HAS 1, DAF 4, MAF Yes
+                } else if (maf === "No") {
+                    maxHours = 40; // HAS 1, DAF 4, MAF No
+                } else if (maf === "MAF 105+") {
+                    maxHours = 168; // HAS 1, DAF 4, MAF 105+
+                }
+            } else if (has === 2) {
+                if (maf === "Yes") {
+                    maxHours = 84; // HAS 2, DAF 4, MAF Yes
+                } else if (maf === "No") {
+                    maxHours = 40; // HAS 2, DAF 4, MAF No
+                } else if (maf === "MAF 105+") {
+                    maxHours = 168; // HAS 2, DAF 4, MAF 105+
+                }
+            } else if (has === 3) {
+                maxHours = 25; // HAS 3, DAF 4, 5, or 6
+            }
+        }
+
+        // Check if government hours exceed maximum allowable hours
+        if (govHours > maxHours) {
+            document.getElementById("error-message").innerText = "Error: Government hours exceed the maximum allowable hours.";
+            document.getElementById("error-message").style.display = "block";
+            document.getElementById("results").style.display = "none";
+            return; // Exit the function
+        } else {
+            document.getElementById("error-message").style.display = "none"; // Clear any previous error messages
+        }
+
+        let currentAllowableHours;
+        if (govHours === 0) {
+            currentAllowableHours = maxHours; // Set to the maximum for the calculated level
+        } else {
+            currentAllowableHours = Math.max(maxHours - govHours, 0);
+        }
+
+        const cfsLevel = determineCFSLevel(currentAllowableHours, maf);
+
+        document.getElementById("current-allowable-hours").innerText = `Current Allowable Hours: ${currentAllowableHours}`;
+        document.getElementById("cfs-level").innerText = `CFS Level: ${cfsLevel}`;
+        
+        document.getElementById("results").style.display = "block";
+
+        // Reset location dropdown and payment amount
+        document.getElementById("location").selectedIndex = 0; // Reset to "Select Location"
+        document.getElementById("payment-amount").innerText = ""; // Clear payment amount
     }
 
-    const cfsLevel = determineCFSLevel(currentAllowableHours, maf);
+    function determineCFSLevel(currentHours, maf) {
+        if (currentHours < 4) return "Level 1";
+        if (currentHours < 10) return "Level 2";
+        if (currentHours < 25) return "Level 3";
+        if (currentHours < 40) return "Level 4";
+        if (currentHours < 44) return "Level 5.1";
+        if (currentHours < 64) return "Level 5.2";
+        if (currentHours < 84) return "Level 5.3";
+        if (currentHours < 105) return "Level 6";
+        if (currentHours < 125) return "Level 7.1";
+        if (currentHours < 145) return "Level 7.2";
+        if (currentHours < 168) return "Level 7.3";
+        return "Level 4"; // Default case if none match
+    }
 
-    // Updated earning structure based on provided levels
-    const earningStructure = {
-        "Slovakia": [32, 80, 200, 319, 351, 510, 670, 838, 998, 1157, 1341],
-        "Greece": [46, 114, 286, 459, 508, 739, 970, 1202, 1432, 1661, 1925],
-        "Antwerp": [105, 261, 651, 1042, 1150, 1672, 2195, 2734, 3255, 3775, 4375],
-        "Netherlands": [105, 261, 651, 1042, 1150, 1672, 2195, 2734, 3255, 3775, 4375],
-        "Hartford": [124, 310, 774, 1240, 1368, 1989, 2610, 3253, 3873, 4493, 5206],
-        "Philadelphia": [124, 310, 774, 1240, 1368, 1989, 2610, 3253, 3873, 4493, 5206],
-        "Detroit": [124, 310, 774, 1240, 1368, 1989, 2610, 3253, 3873, 4493, 5206],
-        "Rockville": [124, 310, 774, 1240, 1368, 1989, 2610, 3253, 3873, 4493, 5206],
-        "Cleveland": [218, 545, 1362, 2179, 2398, 3487, 4576, 5720, 6809, 7898, 9152],
-        "Columbus": [124, 310, 775, 1240, 1364, 1983, 2603, 3254, 3873, 4493, 5206],
-        "Cincinnati": [181, 451, 1128, 1805, 1986, 2889, 3791, 4739, 5642, 6544, 7583],
-        "Portland": [224, 560, 1401, 2241, 2466, 3587, 4707, 5883, 7003, 8123, 9413],
-        "San Francisco Regional": [217, 543, 1358, 2172, 2390, 3475, 4561, 5702, 6788, 7873, 9123],
-        "San Francisco": [200, 499, 1247, 1995, 2196, 3193, 4190, 5238, 6235, 7232, 8380],
-        "Brazil": [19, 48, 119, 191, 210, 306, 401, 502, 597, 693, 803],
-        "Australia": [386, 965, 2412, 3860, 4248, 6177, 8106, 10132, 12062, 13991, 16212],
-        "London": [112, 280, 700, 1121, 1233, 1793, 2353, 2942, 3502, 4062, 4707],
-        "Brussels": [87, 218, 545, 872, 959, 1394, 1830, 2288, 2724, 3159, 3661],
-        "ADIAM": [162, 405, 1012, 1619, 1781, 2590, 3399, 4249, 5058, 5867, 6798],
-        "CASIP": [131, 327, 818, 1309, 1440, 2095, 2749, 3437, 4091, 4746, 5499],
-        "CASIM": [154, 384, 960, 1536, 1690, 2457, 3225, 4032, 4800, 5567, 6451],
-        "Croatia": [51, 128, 319, 511, 562, 817, 1072, 1340, 1595, 1850, 2144]
-    };
+    function showPaymentAmount() {
+        const cfsLevel = document.getElementById("cfs-level").innerText.split(": ")[1];
+        const location = document.getElementById("location").value;
+        const paymentAmounts = {
+            "Slovakia": { "Level 1": 32, "Level 2": 80, "Level 3": 200, "Level 4": 319, "Level 5.1": 351, "Level 5.2": 510, "Level 5.3": 670, "Level 6": 838, "Level 7.1": 998, "Level 7.2": 1157, "Level 7.3": 1341 },
+            "Greece": { "Level 1": 46, "Level 2": 114, "Level 3": 286, "Level 4": 459, "Level 5.1": 508, "Level 5.2": 739, "Level 5.3": 970, "Level 6": 1202, "Level 7.1": 1432, "Level 7.2": 1661, "Level 7.3": 1925 },
+            "Antwerp": { "Level 1": 105, "Level 2": 261, "Level 3": 651, "Level 4": 1042, "Level 5.1": 1150, "Level 5.2": 1672, "Level 5.3": 2195, "Level 6": 2734, "Level 7.1": 3255, "Level 7.2": 3775, "Level 7.3": 4375 },
+            "Netherlands": { "Level 1": 105, "Level 2": 261, "Level 3": 651, "Level 4": 1042, "Level 5.1": 1150, "Level 5.2": 1672, "Level 5.3": 2195, "Level 6": 2734, "Level 7.1": 3255, "Level 7.2": 3775, "Level 7.3": 4375 },
+            "Hartford": { "Level 1": 124, "Level 2": 310, "Level 3": 774, "Level 4": 1240, "Level 5.1": 1368, "Level 5.2": 1989, "Level 5.3": 2610, "Level 6": 3253, "Level 7.1": 3873, "Level 7.2": 4493, "Level 7.3": 5206 },
+            "Philadelphia": { "Level 1": 124, "Level 2": 310, "Level 3": 774, "Level 4": 1240, "Level 5.1": 1368, "Level 5.2": 1989, "Level 5.3": 2610, "Level 6": 3253, "Level 7.1": 3873, "Level 7.2": 4493, "Level 7.3": 5206 },
+            "Detroit": { "Level 1": 124, "Level 2": 310, "Level 3": 774, "Level 4": 1240, "Level 5.1": 1368, "Level 5.2": 1989, "Level 5.3": 2610, "Level 6": 3253, "Level 7.1": 3873, "Level 7.2": 4493, "Level 7.3": 5206 },
+            "Rockville": { "Level 1": 124, "Level 2": 310, "Level 3": 774, "Level 4": 1240, "Level 5.1": 1368, "Level 5.2": 1989, "Level 5.3": 2610, "Level 6": 3253, "Level 7.1": 3873, "Level 7.2": 4493, "Level 7.3": 5206 },
+            "Cleveland": { "Level 1": 218, "Level 2": 545, "Level 3": 1362, "Level 4": 2179, "Level 5.1": 2398, "Level 5.2": 3487, "Level 5.3": 4576, "Level 6": 5720, "Level 7.1": 6809, "Level 7.2": 7898, "Level 7.3": 9152 },
+            "Columbus": { "Level 1": 124, "Level 2": 310, "Level 3": 775, "Level 4": 1240, "Level 5.1": 1364, "Level 5.2": 1983, "Level 5.3": 2603, "Level 6": 3254, "Level 7.1": 3873, "Level 7.2": 4493, "Level 7.3": 5206 },
+            "Cincinnati": { "Level 1": 181, "Level 2": 451, "Level 3": 1128, "Level 4": 1805, "Level 5.1": 1986, "Level 5.2": 2889, "Level 5.3": 3791, "Level 6": 4739, "Level 7.1": 5642, "Level 7.2": 6544, "Level 7.3": 7583 },
+            "Portland": { "Level 1": 224, "Level 2": 560, "Level 3": 1401, "Level 4": 2241, "Level 5.1": 2466, "Level 5.2": 3587, "Level 5.3": 4707, "Level 6": 5883, "Level 7.1": 7003, "Level 7.2": 8123, "Level 7.3": 9413 },
+            "San Francisco Regional": { "Level 1": 217, "Level 2": 543, "Level 3": 1358, "Level 4": 2172, "Level 5.1": 2390, "Level 5.2": 3475, "Level 5.3": 4561, "Level 6": 5702, "Level 7.1": 6788, "Level 7.2": 7873, "Level 7.3": 9123 },
+            "San Francisco": { "Level 1": 200, "Level 2": 499, "Level 3": 1247, "Level 4": 1995, "Level 5.1": 2196, "Level 5.2": 3193, "Level 5.3": 4190, "Level 6": 5238, "Level 7.1": 6235, "Level 7.2": 7232, "Level 7.3": 8380 },
+            "Brazil": { "Level 1": 19, "Level 2": 48, "Level 3": 119, "Level 4": 191, "Level 5.1": 210, "Level 5.2": 306, "Level 5.3": 401, "Level 6": 502, "Level 7.1": 597, "Level 7.2": 693, "Level 7.3": 803 },
+            "Australia": { "Level 1": 386, "Level 2": 965, "Level 3": 2412, "Level 4": 3860, "Level 5.1": 4248, "Level 5.2": 6177, "Level 5.3": 8106, "Level 6": 10132, "Level 7.1": 12062, "Level 7.2": 13991, "Level 7.3": 16212 },
+            "London": { "Level 1": 112, "Level 2": 280, "Level 3": 700, "Level 4": 1121, "Level 5.1": 1233, "Level 5.2": 1793, "Level 5.3": 2353, "Level 6": 2942, "Level 7.1": 3502, "Level 7.2": 4062, "Level 7.3": 4707 },
+            "Brussels": { "Level 1": 87, "Level 2": 218, "Level 3": 545, "Level 4": 872, "Level 5.1": 959, "Level 5.2": 1394, "Level 5.3": 1830, "Level 6": 2288, "Level 7.1": 2724, "Level 7.2": 3159, "Level 7.3": 3661 },
+            "ADIAM": { "Level 1": 162, "Level 2": 405, "Level 3": 1012, "Level 4": 1619, "Level 5.1": 1781, "Level 5.2": 2590, "Level 5.3": 3399, "Level 6": 4249, "Level 7.1": 5058, "Level 7.2": 5867, "Level 7.3": 6798 },
+            "CASIP": { "Level 1": 131, "Level 2": 327, "Level 3": 818, "Level 4": 1309, "Level 5.1": 1440, "Level 5.2": 2095, "Level 5.3": 2749, "Level 6": 3437, "Level 7.1": 4091, "Level 7.2": 4746, "Level 7.3": 5499 },
+            "CASIM": { "Level 1": 154, "Level 2": 384, "Level 3": 960, "Level 4": 1536, "Level 5.1": 1690, "Level 5.2": 2457, "Level 5.3": 3225, "Level 6": 4032, "Level 7.1": 4800, "Level 7.2": 5567, "Level 7.3": 6451 },
+            "Croatia": { "Level 1": 51, "Level 2": 128, "Level 3": 319, "Level 4": 511, "Level 5.1": 562, "Level 5.2": 817, "Level 5.3": 1072, "Level 6": 1340, "Level 7.1": 1595, "Level 7.2": 1850, "Level 7.3": 2144 }
+        };
 
-    // Get the appropriate earning based on CFS Level
-    const earningLevel = Math.ceil(cfsLevel);
-    const amountEarned = earningStructure[location][earningLevel - 1] || 0; // -1 for zero-based index
-
-    document.getElementById("result").innerHTML = `
-        Current Allowable Hours: ${currentAllowableHours}<br>
-        CFS Level: ${cfsLevel}<br>
-        Amount Earned in ${location}: ${amountEarned}
-    `;
-}
+        const cfsPayment = paymentAmounts[location] ? paymentAmounts[location][cfsLevel] : "N/A";
+        document.getElementById("payment-amount").innerText = `Payment Amount: ${cfsPayment}`;
+    }
 </script>
 
 </body>
