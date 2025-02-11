@@ -149,22 +149,40 @@ function calculate() {
 
     const cfsLevel = determineCFSLevel(currentAllowableHours, maf);
 
+    // Updated earning structure based on provided levels
     const earningStructure = {
-        "Slovakia": 10, "Greece": 12, "Antwerp": 15, "Netherlands": 14,
-        "Hartford": 16, "Philadelphia": 18, "Detroit": 20, "Rockville": 22,
-        "Cleveland": 19, "Columbus": 17, "Cincinnati": 15, "Portland": 20,
-        "San Francisco Regional": 25, "San Francisco": 30, "Brazil": 11,
-        "Australia": 28, "London": 24, "Brussels": 23, "ADIAM": 26,
-        "CASIP": 21, "CASIM": 22, "Croatia": 13
+        "Slovakia": [32, 80, 200, 319, 351, 510, 670, 838, 998, 1157, 1341],
+        "Greece": [46, 114, 286, 459, 508, 739, 970, 1202, 1432, 1661, 1925],
+        "Antwerp": [105, 261, 651, 1042, 1150, 1672, 2195, 2734, 3255, 3775, 4375],
+        "Netherlands": [105, 261, 651, 1042, 1150, 1672, 2195, 2734, 3255, 3775, 4375],
+        "Hartford": [124, 310, 774, 1240, 1368, 1989, 2610, 3253, 3873, 4493, 5206],
+        "Philadelphia": [124, 310, 774, 1240, 1368, 1989, 2610, 3253, 3873, 4493, 5206],
+        "Detroit": [124, 310, 774, 1240, 1368, 1989, 2610, 3253, 3873, 4493, 5206],
+        "Rockville": [124, 310, 774, 1240, 1368, 1989, 2610, 3253, 3873, 4493, 5206],
+        "Cleveland": [218, 545, 1362, 2179, 2398, 3487, 4576, 5720, 6809, 7898, 9152],
+        "Columbus": [124, 310, 775, 1240, 1364, 1983, 2603, 3254, 3873, 4493, 5206],
+        "Cincinnati": [181, 451, 1128, 1805, 1986, 2889, 3791, 4739, 5642, 6544, 7583],
+        "Portland": [224, 560, 1401, 2241, 2466, 3587, 4707, 5883, 7003, 8123, 9413],
+        "San Francisco Regional": [217, 543, 1358, 2172, 2390, 3475, 4561, 5702, 6788, 7873, 9123],
+        "San Francisco": [200, 499, 1247, 1995, 2196, 3193, 4190, 5238, 6235, 7232, 8380],
+        "Brazil": [19, 48, 119, 191, 210, 306, 401, 502, 597, 693, 803],
+        "Australia": [386, 965, 2412, 3860, 4248, 6177, 8106, 10132, 12062, 13991, 16212],
+        "London": [112, 280, 700, 1121, 1233, 1793, 2353, 2942, 3502, 4062, 4707],
+        "Brussels": [87, 218, 545, 872, 959, 1394, 1830, 2288, 2724, 3159, 3661],
+        "ADIAM": [162, 405, 1012, 1619, 1781, 2590, 3399, 4249, 5058, 5867, 6798],
+        "CASIP": [131, 327, 818, 1309, 1440, 2095, 2749, 3437, 4091, 4746, 5499],
+        "CASIM": [154, 384, 960, 1536, 1690, 2457, 3225, 4032, 4800, 5567, 6451],
+        "Croatia": [51, 128, 319, 511, 562, 817, 1072, 1340, 1595, 1850, 2144]
     };
 
-    const amountEarned = earningStructure[location] ? earningStructure[location] * currentAllowableHours : 0;
+    // Get the appropriate earning based on CFS Level
+    const earningLevel = Math.ceil(cfsLevel);
+    const amountEarned = earningStructure[location][earningLevel - 1] || 0; // -1 for zero-based index
 
-    // Display the result without currency marker
     document.getElementById("result").innerHTML = `
         Current Allowable Hours: ${currentAllowableHours}<br>
         CFS Level: ${cfsLevel}<br>
-        Amount Earned in ${location}: ${amountEarned.toFixed(2)}
+        Amount Earned in ${location}: ${amountEarned}
     `;
 }
 </script>
