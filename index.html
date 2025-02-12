@@ -241,6 +241,7 @@
     }
 
     function determineCFSLevel(currentAllowableHours) {
+        if (currentAllowableHours === 0) return "Level 0"; // Explicitly handle 0 hours
         if (currentAllowableHours < 4) return "Level 1";
         if (currentAllowableHours < 10) return "Level 2";
         if (currentAllowableHours < 25) return "Level 3";
@@ -251,7 +252,7 @@
         if (currentAllowableHours < 105) return "Level 6";
         if (currentAllowableHours < 125) return "Level 7.1";
         if (currentAllowableHours < 145) return "Level 7.2";
-        if (currentAllowableHours < 168) return "Level 7.3";
+        if (currentAllowableHours === 168) return "Level 7.3"; // Explicitly handle 168 hours
         return "Level 4"; // Default case if none match
     }
 
