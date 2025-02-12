@@ -162,7 +162,7 @@
         
         let maxHours = 0;
 
-        // Calculate maximum hours based on HAS, DAF, and MAF
+        // Calculate maximum allowable hours based on HAS, DAF, and MAF
         if (daf === 1) {
             maxHours = 4;
         } else if (daf === 2) {
@@ -220,18 +220,18 @@
         document.getElementById("payment-amount").innerText = ""; // Clear payment amount
     }
 
-    function determineCFSLevel(currentHours) {
-        if (currentHours < 4) return "Level 1";
-        if (currentHours < 10) return "Level 2";
-        if (currentHours < 25) return "Level 3";
-        if (currentHours < 40) return "Level 4";
-        if (currentHours < 44) return "Level 5.1";
-        if (currentHours < 64) return "Level 5.2";
-        if (currentHours < 84) return "Level 5.3";
-        if (currentHours < 105) return "Level 6";
-        if (currentHours < 125) return "Level 7.1";
-        if (currentHours < 145) return "Level 7.2";
-        if (currentHours < 168) return "Level 7.3";
+    function determineCFSLevel(currentAllowableHours) {
+        if (currentAllowableHours < 4) return "Level 1";
+        if (currentAllowableHours < 10) return "Level 2";
+        if (currentAllowableHours < 25) return "Level 3";
+        if (currentAllowableHours < 40) return "Level 4";
+        if (currentAllowableHours < 44) return "Level 5.1";
+        if (currentAllowableHours < 64) return "Level 5.2";
+        if (currentAllowableHours < 84) return "Level 5.3";
+        if (currentAllowableHours < 105) return "Level 6";
+        if (currentAllowableHours < 125) return "Level 7.1";
+        if (currentAllowableHours < 145) return "Level 7.2";
+        if (currentAllowableHours < 168) return "Level 7.3";
         return "Level 4"; // Default case if none match
     }
 
