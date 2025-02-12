@@ -146,9 +146,23 @@
         const has = document.getElementById("has").value;
         const daf = document.getElementById("daf").value;
         const mafContainer = document.getElementById("maf-container");
+        const mafSelect = document.getElementById("maf");
 
         if ((has === "1" || has === "2") && (daf === "4" || daf === "5" || daf === "6")) {
             mafContainer.style.display = "block";
+            // Enable MAF 105+ only if HAS is 1 and DAF is 6
+            if (has === "1" && daf === "6") {
+                mafSelect.innerHTML = `
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                    <option value="MAF 105+">MAF 105+</option>
+                `;
+            } else {
+                mafSelect.innerHTML = `
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                `;
+            }
         } else {
             mafContainer.style.display = "none";
         }
@@ -176,7 +190,7 @@
                 } else if (maf === "No") {
                     maxHours = 40; // HAS 1, DAF 4, MAF No
                 } else if (maf === "MAF 105+") {
-                    maxHours = 168; // HAS 1, DAF 4, MAF 105+
+                    maxHours = 168; // HAS 1, DAF 6, MAF 105+
                 }
             } else if (has === 2) {
                 if (maf === "Yes") {
@@ -184,7 +198,7 @@
                 } else if (maf === "No") {
                     maxHours = 40; // HAS 2, DAF 4, MAF No
                 } else if (maf === "MAF 105+") {
-                    maxHours = 168; // HAS 2, DAF 4, MAF 105+
+                    maxHours = 168; // HAS 2, DAF 6, MAF 105+
                 }
             } else if (has === 3) {
                 maxHours = 25; // HAS 3, DAF 4, 5, or 6
@@ -210,8 +224,14 @@
 
         const cfsLevel = determineCFSLevel(currentAllowableHours);
 
-        document.getElementById("current-allowable-hours").innerText = `Current Allowable Hours: ${currentAllowableHours}`;
-        document.getElementById("cfs-level").innerText = `CFS Level: ${cfsLevel}`;
+        // Check if allowable hours calculate to 0
+        if (currentAllowableHours === 0) {
+            document.getElementById("current-allowable-hours").innerText = "Based on the calculated allowable hours, there is no homecare eligibility and CFS payments are not applicable.";
+            document.getElementById("cfs-level").innerText = `CFS Level: 0`;
+        } else {
+            document.getElementById("current-allowable-hours").innerText = `Current Allowable Hours: ${currentAllowableHours}`;
+            document.getElementById("cfs-level").innerText = `CFS Level: ${cfsLevel}`;
+        }
         
         document.getElementById("results").style.display = "block";
 
