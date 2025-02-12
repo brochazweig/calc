@@ -1,0 +1,81 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #e0f7f7; /* Light teal background */
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #00695c; /* Dark teal */
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff; /* White background */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+label {
+    margin-top: 10px;
+    display: block;
+    font-weight: bold;
+    color: #004d40; /* Teal */
+}
+
+select, input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 2px solid #80cbc4; /* Light teal border */
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+select:focus, input:focus {
+    border-color: #00796b; /* Darker teal on focus */
+    outline: none;
+}
+
+button {
+    background-color: #00796b; /* Darker teal */
+    color: white;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #004d40; /* Even darker teal on hover */
+}
+
+#results {
+    margin-top: 20px;
+    display: none;
+    padding: 15px;
+    background: #e0f7f7; /* Light teal for results section */
+    border-radius: 8px;
+    border: 1px solid #80cbc4; /* Light teal border */
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#payment-amount {
+    font-weight: bold;
+    margin-top: 10px;
+    color: #00796b; /* Darker teal */
+}
